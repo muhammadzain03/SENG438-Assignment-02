@@ -8,4 +8,4 @@ The assignment emphasizes systematic **test planning**, **test-case design**, an
 All tests are implemented using **JUnit 5**, reinforcing best practices in automated unit testing, traceability from requirements to tests, and disciplined software quality assurance.
 
 📄 Read the full assignment guidelines here:  
-[seng438-a2.md](seng438-a2.md)
+[seng438-a2.md](SENG438-A2-Group08.md)
