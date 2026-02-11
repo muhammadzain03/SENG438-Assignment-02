@@ -1,4 +1,11 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=22600500&assignment_repo_type=AssignmentRepo)
-seng438-a2
+# SENG 438 – Assignment 2  
+## Requirements-Based Test Generation
 
-Read [the assignment guideline](seng438-a2.md) 
+This assignment focuses on applying **requirements-based (black-box) testing techniques** to real-world software components. Students design and implement unit tests for selected classes from the **JFreeChart** library based solely on their **Javadoc API specifications**, without referencing source code implementations.
+
+The assignment emphasizes systematic **test planning**, **test-case design**, and **test execution**. Test cases are derived using formal black-box techniques such as **equivalence class partitioning** and **boundary value analysis** to ensure adequate coverage of functional requirements.
+
+All tests are implemented using **JUnit 5**, reinforcing best practices in automated unit testing, traceability from requirements to tests, and disciplined software quality assurance.
+
+📄 Read the full assignment guidelines here:  
+[seng438-a2.md](seng438-a2.md)
