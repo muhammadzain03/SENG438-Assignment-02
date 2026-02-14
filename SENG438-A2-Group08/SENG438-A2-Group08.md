@@ -339,8 +339,207 @@ The failing and error tests successfully identified implementation bugs in the J
 4. **False Confidence:** Tests may pass with mocks but fail with real implementations if mocks do not accurately represent actual behavior.
 
 ---
+# 4 Test cases developed
 
-# 4 How the team work/effort was divided and managed
+This section documents all test cases developed for the `org.jfree.data.Range` class. The tests are organized by method, with clear identification of the equivalence classes and boundary conditions each test covers.
+
+## 4.1 Range Testing
+
+### 4.1.1 getCentralValue() - 3 Test Cases
+
+**Method Specification:** Returns the midpoint of the range, computed from the lower and upper bounds.
+
+**Test Class:** `RangeTest.java`
+
+#### Equivalence Classes Identified:
+- **EC1:** Symmetric range around zero (e.g., -a to a)
+- **EC2:** Positive-only range
+- **EC3:** Mixed negative-to-zero range
+
+#### Boundary Values Identified:
+- **BV1:** Symmetric bounds (-1, 1)
+- **BV2:** Simple small positive bounds (1, 3)
+- **BV3:** Negative-to-zero bounds (-10, 0)
+
+#### Test Cases:
+
+| Test Method | Covers | Status |
+|------------|--------|--------|
+| `getCentralValue_shouldBeZero_forSymmetricRangeMinus1To1()` | EC1, BV1 - Symmetric range | PASS |
+| `getCentralValue_shouldBeTwo_forRangeOneToThree()` | EC2, BV2 - Positive-only range | PASS |
+| `getCentralValue_shouldBeMinusFive_forRangeMinus10To0()` | EC3, BV3 - Negative-to-zero range | PASS |
+
+**Test Results:** 3 PASS, 0 FAIL
+
+---
+
+### 4.1.2 getUpperBound() - 2 Test Cases
+
+**Method Specification:** Returns the upper bound value of the range.
+
+**Test Class:** `RangeTest.java`
+
+#### Equivalence Classes Identified:
+- **EC1:** Standard range with negative lower and positive upper
+- **EC2:** Positive-only range
+
+#### Boundary Values Identified:
+- **BV1:** Upper bound at 1 (range -1 to 1)
+- **BV2:** Upper bound at 3 (range 1 to 3)
+
+#### Test Cases:
+
+| Test Method | Covers | Status |
+|------------|--------|--------|
+| `getUpperBound_shouldBeOne_forRangeMinus1To1()` | EC1, BV1 - Upper bound = 1 | FAIL |
+| `getUpperBound_shouldBeThree_forRangeOneToThree()` | EC2, BV2 - Upper bound = 3 | FAIL |
+
+**Test Results:** 0 PASS, 2 FAIL
+
+---
+
+### 4.1.3 getLowerBound() - 2 Test Cases
+
+**Method Specification:** Returns the lower bound value of the range.
+
+**Test Class:** `RangeTest.java`
+
+#### Equivalence Classes Identified:
+- **EC1:** Standard range with negative lower and positive upper
+- **EC2:** Positive-only range
+
+#### Boundary Values Identified:
+- **BV1:** Lower bound at -1 (range -1 to 1)
+- **BV2:** Lower bound at 1 (range 1 to 3)
+
+#### Test Cases:
+
+| Test Method | Covers | Status |
+|------------|--------|--------|
+| `getLowerBound_shouldBeMinusOne_forRangeMinus1To1()` | EC1, BV1 - Lower bound = -1 | PASS |
+| `getLowerBound_shouldBeOne_forRangeOneToThree()` | EC2, BV2 - Lower bound = 1 | PASS |
+
+**Test Results:** 2 PASS, 0 FAIL
+
+---
+
+### 4.1.4 getLength() - 3 Test Cases
+
+**Method Specification:** Returns the length of the range (upper - lower).
+
+**Test Class:** `RangeTest.java`
+
+#### Equivalence Classes Identified:
+- **EC1:** Standard range spanning negative to positive
+- **EC2:** Single-point range (lower = upper)
+- **EC3:** General mixed range with larger span
+
+#### Boundary Values Identified:
+- **BV1:** Length = 2 (range -1 to 1)
+- **BV2:** Length = 0 (range 5 to 5)
+- **BV3:** Length = 10 (range -3 to 7)
+
+#### Test Cases:
+
+| Test Method | Covers | Status |
+|------------|--------|--------|
+| `getLength_shouldBeTwo_forRangeMinus1To1()` | EC1, BV1 - Standard span | PASS |
+| `getLength_shouldBeZero_forSinglePointRange()` | EC2, BV2 - Degenerate range | PASS |
+| `getLength_shouldBeTen_forRangeMinus3To7()` | EC3, BV3 - Larger span | PASS |
+
+**Test Results:** 3 PASS, 0 FAIL
+
+---
+
+### 4.1.5 contains(double value) - 6 Test Cases
+
+**Method Specification:** Returns true if the supplied value lies within the range (inclusive of endpoints). Returns false for values outside the range.
+
+**Test Class:** `RangeTest.java`
+
+#### Equivalence Classes Identified:
+- **EC1:** Value strictly inside the range
+- **EC2:** Value equal to lower bound (inclusive)
+- **EC3:** Value equal to upper bound (inclusive)
+- **EC4:** Value strictly below range
+- **EC5:** Value strictly above range
+- **EC6:** Special double input (NaN)
+
+#### Boundary Values Identified:
+- **BV1:** Lower endpoint = -1
+- **BV2:** Upper endpoint = 1
+- **BV3:** Value just outside lower bound (-2)
+- **BV4:** Value just outside upper bound (2)
+
+#### Test Cases:
+
+| Test Method | Covers | Status |
+|------------|--------|--------|
+| `contains_shouldReturnTrue_forValueInsideRange()` | EC1 - Inside value (0) | PASS |
+| `contains_shouldReturnTrue_forLowerBoundaryValue()` | EC2, BV1 - Lower endpoint (-1) | PASS |
+| `contains_shouldReturnTrue_forUpperBoundaryValue()` | EC3, BV2 - Upper endpoint (1) | PASS |
+| `contains_shouldReturnFalse_forValueBelowRange()` | EC4, BV3 - Below range (-2) | PASS |
+| `contains_shouldReturnFalse_forValueAboveRange()` | EC5, BV4 - Above range (2) | PASS |
+| `contains_shouldReturnFalse_forNaN()` | EC6 - NaN input | PASS |
+
+**Test Results:** 6 PASS, 0 FAIL
+
+---
+
+### 4.1.6 intersects(double lower, double upper) - 6 Test Cases
+
+**Method Specification:** Returns true if the supplied range overlaps with this range. Overlap includes touching at endpoints depending on specification.
+
+**Test Class:** `RangeTest.java`
+
+#### Equivalence Classes Identified:
+- **EC1:** Other range completely above this range
+- **EC2:** Other range overlaps on the right side
+- **EC3:** Other range touches this range at upper boundary
+- **EC4:** Other range touches this range at lower boundary
+- **EC5:** Other range completely below this range
+- **EC6:** Other range fully covers this range
+
+#### Boundary Values Identified:
+- **BV1:** Touching at upper endpoint (1)
+- **BV2:** Touching at lower endpoint (-1)
+- **BV3:** Just above this range (2 to 50)
+- **BV4:** Just below this range (-10 to -2)
+
+#### Test Cases:
+
+| Test Method | Covers | Status |
+|------------|--------|--------|
+| `intersects_shouldReturnFalse_whenOtherRangeIsCompletelyAbove()` | EC1, BV3 - Disjoint above | PASS |
+| `intersects_shouldReturnTrue_whenOtherRangeOverlapsOnRight()` | EC2 - Partial overlap right (0 to 50) | FAIL |
+| `intersects_shouldReturnTrue_whenOtherRangeTouchesUpperBoundary()` | EC3, BV1 - Touching at 1 (1 to 50) | FAIL |
+| `intersects_shouldReturnTrue_whenOtherRangeTouchesLowerBoundary()` | EC4, BV2 - Touching at -1 (-10 to -1) | PASS |
+| `intersects_shouldReturnFalse_whenOtherRangeIsCompletelyBelow()` | EC5, BV4 - Disjoint below (-10 to -2) | FAIL |
+| `intersects_shouldReturnTrue_whenOtherRangeFullyCoversExampleRange()` | EC6 - Full coverage (-10 to 10) | PASS |
+
+**Test Results:** 3 PASS, 3 FAIL
+
+---
+
+## 4.2 Summary of Range Test Coverage
+
+**Total Test Cases Created: 22**
+
+| Method | Test Cases | PASS | FAIL |
+|--------|-----------|------|------|
+| getCentralValue | 3 | 3 | 0 |
+| getUpperBound | 2 | 0 | 2 |
+| getLowerBound | 2 | 2 | 0 |
+| getLength | 3 | 3 | 0 |
+| contains | 6 | 6 | 0 |
+| intersects | 6 | 3 | 3 |
+| **TOTAL** | **22** | **17** | **5** |
+
+The failing tests indicate potential implementation issues or specification mismatches for `getUpperBound()` and some `intersects()` boundary/overlap behaviors. The overall suite covers standard inputs, boundary endpoints, disjoint ranges, full coverage, and special input handling (NaN) for the tested methods.
+
+---
+
+# 5 How the team work/effort was divided and managed
 
 The workload for this lab was divided by class responsibility to ensure parallel development and clear ownership.
 
@@ -364,11 +563,11 @@ This division of work allowed for efficient parallel development while maintaini
 
 ---
 
-# 5 Difficulties encountered, challenges overcome, and lessons learned
+# 6 Difficulties encountered, challenges overcome, and lessons learned
 
 Several technical and conceptual challenges were encountered during this lab that provided valuable learning experiences.
 
-## 5.1 Interpreting Javadoc Strictly as Requirements
+## 6.1 Interpreting Javadoc Strictly as Requirements
 
 One of the main difficulties was relying strictly on Javadoc documentation without examining the source code. In several cases, the actual implementation behavior differed from the documented specification. For example:
 - The Javadoc specified `InvalidParameterException` for null inputs, but the actual implementation threw `IllegalArgumentException` or `NullPointerException`
@@ -378,7 +577,7 @@ This required careful analysis to distinguish between test design errors and act
 
 **Lesson learned:** API specifications may not always perfectly match implementations. Rigorous testing reveals such inconsistencies, which is valuable for identifying both documentation and implementation defects.
 
-## 5.2 Mocking Interfaces Correctly
+## 6.2 Mocking Interfaces Correctly
 
 Testing methods that accept interfaces (`Values2D`, `KeyedValues`) required proper use of the Mockito framework. Initial challenges included:
 - Configuring mock return values for multiple sequential method calls
@@ -389,7 +588,7 @@ The solution involved systematically setting up mock expectations in the correct
 
 **Lesson learned:** Mocking requires precise control over method behavior and deep understanding of how the method under test iterates over data structures. Proper mock configuration is critical for test validity.
 
-## 5.3 Handling Null and Edge Cases
+## 6.3 Handling Null and Edge Cases
 
 Several methods did not handle null inputs, empty collections, or special values exactly as specified in the Javadoc:
 - `createNumberArray` and `createNumberArray2D` returned arrays containing null Number objects instead of properly wrapped doubles
@@ -398,7 +597,7 @@ Several methods did not handle null inputs, empty collections, or special values
 
 **Lesson learned:** Writing comprehensive edge-case tests for null inputs, empty collections, boundary values, and special numeric values is critical for exposing implementation weaknesses. These tests often reveal the most significant defects.
 
-## 5.4 Large Test Suite Management and Debugging
+## 6.4 Large Test Suite Management and Debugging
 
 Managing a test suite of 75+ test cases presented organizational challenges:
 - Systematic naming conventions were essential for identifying test purpose and coverage
@@ -408,7 +607,7 @@ Managing a test suite of 75+ test cases presented organizational challenges:
 
 **Lesson learned:** A failing test is not always incorrect—it can indicate a real defect in the system under test. Proper test organization, clear naming, and thorough documentation are essential for managing large test suites.
 
-## 5.5 Boundary Value Analysis Application
+## 6.5 Boundary Value Analysis Application
 
 Applying boundary value analysis to array-based and numeric methods required careful identification of:
 - Array length boundaries (0, 1, 2, large arrays)
@@ -418,7 +617,7 @@ Applying boundary value analysis to array-based and numeric methods required car
 
 **Lesson learned:** Systematic application of boundary value analysis significantly increases defect detection. Testing at, just below, and just above boundaries is essential for thorough coverage.
 
-## 5.6 Key Takeaways
+## 6.6 Key Takeaways
 
 This lab significantly strengthened understanding of:
 - **Black-box test design:** Designing tests based solely on specifications without implementation knowledge
@@ -430,7 +629,7 @@ This lab significantly strengthened understanding of:
 
 ---
 
-# 6 Comments/feedback on the lab itself
+# 7 Comments/feedback on the lab itself
 
 This lab was highly effective in reinforcing the importance of requirements-based testing and systematic test-case design in a practical context.
 
